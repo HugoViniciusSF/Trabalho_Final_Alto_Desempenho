@@ -67,24 +67,6 @@ As implementações serão comparadas usando:
 - impacto da transferência de dados entre CPU e GPU;
 - qualidade/estabilidade dos agrupamentos.
 
-## Cronograma
-
-O cronograma abaixo foi retirado do guia do projeto e serve como referência para organizar as entregas do grupo.
-
-| Data | Atividade | Organização sugerida |
-|------|-----------|----------------------|
-| 19/05 | Definição das equipes e sorteio dos datasets | Confirmar integrantes e dataset Penguins |
-| 23/05 | Primeira reunião do grupo | Registrar ata, decisões iniciais e divisão preliminar de tarefas |
-| 30/05 | Segunda reunião do grupo | Validar pré-processamento do dataset e iniciar baseline sequencial |
-| 13/06 | Terceira reunião do grupo | Revisar implementações paralelas e planejar experimentos |
-| 19/06 | Último dia para enviar todas as atividades | Fechar código, resultados, README e materiais de entrega |
-| 22/06 e 23/06 | Arguição da segunda lista | Preparar respostas e revisar conceitos relacionados |
-| 30/06 e 02/07 | Apresentação do projeto | Apresentação oral, demonstração do código e discussão dos resultados |
-| 07/07 | Dúvidas sobre a quarta prova | Revisão final da disciplina |
-| 09/07 | Quarta prova | Avaliação final |
-
-Para facilitar o andamento, o grupo pode usar as reuniões para atualizar três pontos: o que foi concluído, o que está bloqueado e o que cada integrante fará até o próximo encontro.
-
 ## Estrutura do Projeto
 
 ```text
