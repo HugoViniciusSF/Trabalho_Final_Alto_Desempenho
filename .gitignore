@@ -15,13 +15,15 @@ bin/
 *.cubin
 *.fatbin
 
-# Dados e resultados gerados
+# Dados e resultados
 data/raw/*
 data/processed/*
 resultados/*
 !data/raw/.gitkeep
+!data/raw/README.md
 !data/processed/.gitkeep
 !resultados/.gitkeep
+!resultados/initial_results.md
 
 # Arquivos temporarios
 *.log

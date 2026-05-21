@@ -27,21 +27,9 @@ As versões planejadas são:
 | OpenMP GPU | GPU via diretivas OpenMP | Avaliar offload para GPU com uma abordagem baseada em diretivas |
 | CUDA | GPU com CUDA | Comparar uma implementação mais explícita em GPU |
 
-## Dataset: Penguins
+## Dataset
 
-O **Penguins Dataset** contém medições de pinguins de diferentes espécies. Ele é frequentemente usado em tarefas de análise exploratória, classificação e agrupamento por possuir variáveis numéricas úteis para separar grupos naturalmente.
-
-Algumas variáveis típicas do dataset são:
-
-- comprimento do bico;
-- profundidade do bico;
-- comprimento da nadadeira;
-- massa corporal;
-- espécie;
-- ilha;
-- sexo.
-
-Para o K-means, o foco será utilizar principalmente os atributos numéricos. As colunas categóricas podem ser usadas apenas para análise posterior dos grupos ou removidas durante o pré-processamento.
+O dataset utilizado no projeto está documentado em [data/raw/README.md](data/raw/README.md).
 
 ## O que será feito
 
