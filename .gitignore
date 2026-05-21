@@ -22,6 +22,7 @@ resultados/*
 !data/raw/.gitkeep
 !data/raw/README.md
 !data/processed/.gitkeep
+!data/processed/penguins_clean.csv
 !resultados/.gitkeep
 !resultados/initial_results.md
 

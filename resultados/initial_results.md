@@ -23,6 +23,14 @@ O arquivo analisado foi `data/raw/penguins.csv`, correspondente ao Penguins Data
 | `sex` | Categórica | 11 |
 | `year` | Categórica | 0 |
 
+## Limpeza dos dados
+
+| Informação | Quantidade |
+|---|---:|
+| Linhas no CSV original | 344 |
+| Linhas com valores nulos | 11 |
+| Linhas após a limpeza | 333 |
+
 ## Distribuição das colunas categóricas
 
 ### Espécies
