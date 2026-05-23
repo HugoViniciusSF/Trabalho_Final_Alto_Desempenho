@@ -6,21 +6,7 @@ import csv
 import math
 from collections import Counter
 from pathlib import Path
-
-
-ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_INPUT = ROOT / "data" / "raw" / "penguins.csv"
-
-NUMERIC_COLUMNS = [
-    "bill_length_mm",
-    "bill_depth_mm",
-    "flipper_length_mm",
-    "body_mass_g",
-]
-
-CATEGORICAL_COLUMNS = ["species", "island", "sex", "year"]
-MISSING_VALUES = {"", "NA", "NaN", "nan", "null", "None"}
-
+from dataset_config import RAW_DATA_PATH, NUMERIC_COLUMNS, CATEGORICAL_COLUMNS, MISSING_VALUES
 
 def is_missing(value: str | None) -> bool:
     return value is None or value.strip() in MISSING_VALUES
@@ -164,7 +150,7 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Le e explora o arquivo data/raw/penguins.csv."
     )
-    parser.add_argument("--input", type=Path, default=DEFAULT_INPUT)
+    parser.add_argument("--input", type=Path, default=RAW_DATA_PATH)
     return parser.parse_args()
 
 
