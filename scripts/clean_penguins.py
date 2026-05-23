@@ -83,6 +83,30 @@ def remove_outliers_iqr(rows: list[dict[str, str]], column: str, multiplier: flo
             
     return clean_rows
 
+def normalize_min_max(rows: list[dict[str, str]], columns_to_normalize: list[str]) -> list[dict[str, str]]:
+    min_max_vals = {}
+    for col in columns_to_normalize:
+        vals = [float(row[col]) for row in rows if row.get(col) and row[col].replace('.', '', 1).isdigit()]
+        if vals:
+            min_max_vals[col] = {"min": min(vals), "max": max(vals)}
+            
+    normalized_rows = []
+    for row in rows:
+        new_row = row.copy()
+        for col in columns_to_normalize:
+            if col in min_max_vals and new_row.get(col) and new_row[col].replace('.', '', 1).isdigit():
+                x = float(new_row[col])
+                min_val = min_max_vals[col]["min"]
+                max_val = min_max_vals[col]["max"]
+                
+                if max_val - min_val == 0:
+                    new_row[col] = "0.0"
+                else:
+                    x_norm = (x - min_val) / (max_val - min_val)
+                    new_row[col] = str(round(x_norm, 6))
+        normalized_rows.append(new_row)
+    return normalized_rows
+
 def shuffle_dataset(rows: list[dict[str, str]], seed: int = 99) -> list[dict[str, str]]:
     random.seed(seed)
     random.shuffle(rows)
@@ -113,6 +137,7 @@ def clean_csv(input_path: Path, output_path: Path) -> None:
     for col in NUMERIC_COLUMNS:
         clean_rows = remove_outliers_iqr(clean_rows, col)
 
+    clean_rows = normalize_min_max(clean_rows, NUMERIC_COLUMNS)
     clean_rows = shuffle_dataset(clean_rows)
     
     write_csv(output_path, columns, clean_rows)
