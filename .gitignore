@@ -21,8 +21,9 @@ data/processed/*
 resultados/*
 !data/raw/.gitkeep
 !data/raw/README.md
+!data/raw/*.csv
 !data/processed/.gitkeep
-!data/processed/penguins_clean.csv
+!data/processed/*.csv
 !resultados/.gitkeep
 !resultados/initial_results.md
 
