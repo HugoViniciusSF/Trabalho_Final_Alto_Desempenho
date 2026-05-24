@@ -3,6 +3,7 @@
 
 #define CLEAN_DATA_PATH "../../data/processed/penguins_clean.csv"
 
+#define NUM_CLUSTERS 3
 #define NUM_FEATURES 4
 static const char *FEATURE_NAMES[] = {
     "bill_length_mm",
