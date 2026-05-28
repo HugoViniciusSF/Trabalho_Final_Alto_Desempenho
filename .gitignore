@@ -26,6 +26,18 @@ resultados/*
 !data/processed/*.csv
 !resultados/.gitkeep
 !resultados/initial_results.md
+!resultados/cuda/
+!resultados/cuda/.gitkeep
+!resultados/cuda/*.md
+!resultados/mpi_openmp/
+!resultados/mpi_openmp/.gitkeep
+!resultados/mpi_openmp/*.md
+!resultados/openmp_gpu/
+!resultados/openmp_gpu/.gitkeep
+!resultados/openmp_gpu/*.md
+!resultados/sequencial/
+!resultados/sequencial/.gitkeep
+!resultados/sequencial/*.md
 
 # Arquivos temporarios
 *.log
