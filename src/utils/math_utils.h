@@ -10,4 +10,9 @@ void initialize_centroids(const double *dataset, int num_points, int k, int num_
 // Pipeline completa do K-means
 void run_kmeans(const double *dataset, int num_points, int k, int num_features, int max_iterations, double *centroids, int *labels);
 
+#ifdef USE_MPI
+// Pipeline do K-means paralela com MPI e OpenMP
+void run_kmeans_mpi_openmp(const double *dataset, int num_points, int k, int num_features, int max_iterations, double *centroids, int *labels, int rank, int size);
+#endif
+
 #endif

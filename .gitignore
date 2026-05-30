@@ -9,6 +9,8 @@ bin/
 *.exe
 *.out
 *.err
+src/mpi_openmp/kmeans_mpi_openmp
+src/sequencial/kmeans_seq
 
 # CUDA/OpenMP temporarios
 *.ptx
@@ -47,3 +49,5 @@ resultados/*
 *~
 .DS_Store
 __pycache__/
+
+.clang-format
