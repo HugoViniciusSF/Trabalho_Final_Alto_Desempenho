@@ -16,8 +16,8 @@ Este arquivo centraliza os checklists das implementacoes em `src/`.
 ### Metricas
 
 - [x] Medir tempo de execucao
-- [ ] Calcular speedup
-- [ ] Calcular eficiencia
+- [x] Calcular speedup
+- [x] Calcular eficiencia
 - [ ] Avaliar escalabilidade forte
 - [ ] Avaliar escalabilidade fraca
 - [ ] Discutir overhead de comunicacao no MPI

@@ -23,7 +23,7 @@ O tempo sequencial e a base da comparacao. Como esta versao nao usa paralelismo,
 |---|---:|
 | Tempo sequencial | 0.000080000 s |
 | Iteracoes | 9 |
-| Unidades de execucao | 1 |
+| Processos/threads usados | 1 |
 | Speedup | 1.00 |
 | Eficiencia | 1.00 |
 | Tempo por iteracao | 0.000008889 s |
