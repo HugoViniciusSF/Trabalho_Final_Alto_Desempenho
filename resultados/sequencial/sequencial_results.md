@@ -14,3 +14,17 @@ Clusters salvo: ../../data/processed/results_sequencial.csv
 ## Observacao
 
 A execucao utilizou o dataset tratado `data/processed/penguins_clean.csv`, com 333 pontos e 4 atributos numericos. O arquivo gerado com os clusters foi salvo em `data/processed/results_sequencial.csv`.
+
+## Metricas Calculadas
+
+O tempo sequencial e a base da comparacao. Como esta versao nao usa paralelismo, o speedup e a eficiencia ficam em 1.00.
+
+| Metrica | Valor |
+|---|---:|
+| Tempo sequencial | 0.000080000 s |
+| Iteracoes | 9 |
+| Unidades de execucao | 1 |
+| Speedup | 1.00 |
+| Eficiencia | 1.00 |
+| Tempo por iteracao | 0.000008889 s |
+| Tempo por ponto | 0.000000240 s |

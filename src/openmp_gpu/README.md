@@ -121,14 +121,19 @@ Preencher a tabela abaixo apos os testes.
 | Sequencial | 0.000080000 | - | 9 | 1.00 |
 | OpenMP GPU | _preencher_ | _preencher_ | _preencher_ | _preencher_ |
 
-## 9. Comparacao com CUDA
+## 9. Calculo das Metricas
 
-Quando a versao CUDA estiver pronta, preencher:
+O speedup deve ser calculado por:
 
-| Versao GPU | Tempo total (s) | Observacoes |
-|---|---:|---|
-| OpenMP GPU | _preencher_ | _preencher_ |
-| CUDA | _preencher_ | _preencher_ |
+```text
+speedup = tempo_sequencial / tempo_openmp_gpu
+```
+
+A eficiencia pode ser calculada por:
+
+```text
+eficiencia = speedup / quantidade_total_de_unidades_de_execucao
+```
 
 ## 10. Discussao dos Resultados
 

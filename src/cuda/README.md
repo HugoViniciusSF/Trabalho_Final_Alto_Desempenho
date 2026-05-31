@@ -126,7 +126,7 @@ Preencher a tabela abaixo apos a execucao.
 | Sequencial | 0.000080000 | - | - | 9 |
 | CUDA | _preencher_ | _preencher_ | _preencher_ | _preencher_ |
 
-## 9. Comparacao com a Versao Sequencial
+## 9. Calculo das Metricas
 
 O speedup deve ser calculado por:
 
@@ -134,11 +134,12 @@ O speedup deve ser calculado por:
 speedup = tempo_sequencial / tempo_cuda
 ```
 
-| Metrica | Valor |
-|---|---:|
-| Tempo sequencial | 0.000080000 s |
-| Tempo CUDA | _preencher_ |
-| Speedup | _preencher_ |
+A eficiencia pode ser calculada por:
+
+```text
+eficiencia = speedup / quantidade_total_de_unidades_de_execucao
+```
+
 
 ## 10. Discussao dos Resultados
 
