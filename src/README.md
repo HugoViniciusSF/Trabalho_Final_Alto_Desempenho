@@ -74,15 +74,15 @@ Este arquivo centraliza os checklists das implementacoes em `src/`.
 
 ### Checklist
 
-- [ ] Criar kernel para calculo de distancias
-- [ ] Criar kernel ou rotina para atribuicao dos clusters
-- [ ] Atualizar centroides
-- [ ] Gerenciar alocacao e copia de memoria CPU-GPU
-- [ ] Medir tempo total e tempo de kernels
+- [X] Criar kernel para calculo de distancias
+- [x] Criar kernel ou rotina para atribuicao dos clusters
+- [x] Atualizar centroides
+- [x] Gerenciar alocacao e copia de memoria CPU-GPU
+- [x] Medir tempo total e tempo de kernels
 
 ### Metricas
 
-- [ ] Medir tempo de execucao
+- [x] Medir tempo de execucao
 - [ ] Calcular speedup
 - [ ] Calcular eficiencia
 - [ ] Avaliar escalabilidade forte
