@@ -1,5 +1,6 @@
 CC = gcc
-CFLAGS = -Wall -O3 -fopenmp
+# sm_80 e o maximo suportado pelo GCC 13; -fno-stack-protector necessario pois o PTX nao tem stack canary
+CFLAGS = -Wall -O3 -fopenmp -fno-stack-protector -foffload=nvptx-none="-misa=sm_80 -O3 -lm -fcf-protection=none -fno-stack-protector"
 
 UTILS_DIR = ../utils
 INCLUDES = -I$(UTILS_DIR)

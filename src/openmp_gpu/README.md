@@ -1,70 +1,76 @@
 ## Resumo
 
-Esta versao tem como objetivo implementar o K-means usando diretivas OpenMP com offload para GPU. Diferente da versao CUDA, em que os kernels sao escritos explicitamente, aqui a paralelizacao deve ser expressa com diretivas OpenMP, transferindo regioes de computacao para o dispositivo acelerador.
+Esta versão implementa o K-means usando diretivas OpenMP com offload para GPU. Diferente da versão CUDA, em que os kernels são escritos explicitamente, aqui a paralelização é expressa com diretivas OpenMP, transferindo regiões de computação para o dispositivo acelerador via backend nvptx do GCC.
 
-O foco desta implementacao e avaliar se uma abordagem baseada em diretivas consegue obter ganho de desempenho com menor complexidade de codigo.
+O foco desta implementação é avaliar se uma abordagem baseada em diretivas consegue obter ganho de desempenho com menor complexidade de código, e comparar o desempenho com a versão CUDA nativa.
 
 ## 1. Objetivo
 
-O objetivo desta etapa e adaptar a versao sequencial para executar a parte mais custosa do K-means na GPU por meio de OpenMP offload.
+O objetivo desta etapa é adaptar a versão sequencial para executar a parte mais custosa do K-means na GPU por meio de OpenMP offload.
 
-Essa versao deve permitir analisar:
+Essa versão permite analisar:
 
-1. O custo de transferencia entre CPU e GPU.
-2. O tempo gasto na atribuicao dos pontos aos clusters.
-3. A diferenca de desempenho em relacao a versao sequencial.
-4. A diferenca de desempenho em relacao a versao CUDA.
+1. O custo de transferência entre CPU e GPU.
+2. O tempo gasto na atribuição dos pontos aos clusters.
+3. A diferença de desempenho em relação à versão sequencial.
+4. A diferença de desempenho em relação à versão CUDA.
 
 ## 2. Entrada de Dados
 
-O arquivo de entrada esperado e:
+O arquivo de entrada esperado é:
 
 ```text
 ../../data/processed/penguins_clean.csv
 ```
 
-As features usadas devem ser as mesmas da versao sequencial:
+As features usadas são as mesmas da versão sequencial:
 
-| Atributo | Descricao |
+| Atributo | Descrição |
 |---|---|
 | `bill_length_mm` | Comprimento do bico |
 | `bill_depth_mm` | Profundidade do bico |
 | `flipper_length_mm` | Comprimento da nadadeira |
 | `body_mass_g` | Massa corporal |
 
-## 3. Estrategia de Paralelizacao
+## 3. Estratégia de Paralelização
 
-Na versao OpenMP GPU, a ideia e manter a estrutura geral do K-means em C e usar diretivas OpenMP para enviar dados ao dispositivo e paralelizar os loops principais.
+A versão OpenMP GPU mantém a estrutura geral do K-means em C e usa diretivas OpenMP para enviar dados ao dispositivo e paralelizar os loops principais.
 
-O fluxo esperado e:
+O fluxo é:
 
 1. Ler o dataset na CPU.
-2. Inicializar centroides com a mesma estrategia da versao sequencial.
-3. Criar regioes `target data` para mapear dataset, centroides e labels.
-4. Usar diretivas OpenMP para paralelizar a atribuicao dos pontos aos clusters na GPU.
-5. Atualizar centroides usando reducoes ou somas parciais.
-6. Repetir ate convergir ou atingir o limite maximo de iteracoes.
-7. Copiar labels finais para a CPU.
-8. Salvar o resultado em CSV.
+2. Inicializar centróides com a mesma estratégia da versão sequencial (`srand(42)`).
+3. Criar regiões `target enter data` para mapear dataset, centróides e labels para a GPU.
+4. A cada iteração, paralelizar com `target teams distribute parallel for`:
+   - Zerar acumuladores (`cluster_sizes` e `new_centroids`) na GPU.
+   - Atribuir cada ponto ao cluster mais próximo (com `atomic` para acumular somas).
+   - Atualizar centróides dividindo as somas pelos tamanhos de cada cluster.
+5. Detectar convergência com `reduction(max:changed)`.
+6. Copiar labels e centróides finais para a CPU com `target exit data`.
+7. Salvar resultado em CSV.
 
-## 4. Organizacao do Codigo
+## 4. Organização do Código
 
-Preencher quando a implementacao OpenMP GPU estiver pronta.
-
-| Arquivo | Funcao |
+| Arquivo | Função |
 |---|---|
-| `main.c` | Ponto de entrada da versao OpenMP GPU |
-| `Makefile` | Compilacao com suporte a OpenMP offload |
-| `../utils/dataset_config.h` | Configuracao do dataset, numero de clusters e features |
+| `main.c` | Ponto de entrada da versão OpenMP GPU |
+| `Makefile` | Compilação com suporte a OpenMP offload (nvptx-none, sm_80) |
+| `../utils/dataset_config.h` | Configuração do dataset, número de clusters e features |
 | `../utils/io_utils.c` | Leitura do CSV e escrita dos resultados |
-| `../utils/math_utils.c` | Funcoes auxiliares compartilhadas, se aplicavel |
+| `../utils/math_utils.c` | Funções auxiliares compartilhadas |
 
 ## 5. Como Compilar e Rodar
 
-Com o Makefile criado, a execucao deve seguir o modelo:
+### Pré-requisitos (Ubuntu 24.04)
 
 ```bash
-cd "../PROJETO_FINAL_ALTO_DESEMPENHO/src/openmp_gpu"
+sudo apt-get install -y gcc-13-offload-nvptx nvptx-tools libgomp-plugin-nvptx1
+```
+
+### Compilação e execução
+
+```bash
+cd src/openmp_gpu
 make
 ./kmeans_openmp_gpu
 ```
@@ -75,35 +81,37 @@ Para limpar os arquivos gerados:
 make clean
 ```
 
-Registrar aqui, se necessario, flags especificas usadas pelo compilador:
+### Flags utilizadas
 
 ```bash
-gcc -fopenmp -foffload=___ main.c ../utils/io_utils.c ../utils/math_utils.c -o kmeans_openmp_gpu -lm
+gcc -Wall -O3 -fopenmp -fno-stack-protector \
+    -foffload=nvptx-none="-misa=sm_80 -O3 -lm -fcf-protection=none -fno-stack-protector" \
+    main.c ../utils/io_utils.c ../utils/math_utils.c -o kmeans_openmp_gpu -lm
 ```
 
-## 6. Saida Esperada
+Obs: GCC 13 só suporta até sm_80 no backend nvptx. A RTX 4050 é sm_89 mas roda PTX sm_80 por compatibilidade retroativa. As flags `-fno-stack-protector` e `-fcf-protection=none` são necessárias porque o PTX não tem suporte ao stack canary do Linux.
 
-Preencher esta secao com a saida real do terminal apos a execucao.
+## 6. Saída Esperada
 
 ```text
-Carregou ___ pontos com ___ features.
+Carregou 333 pontos com 4 features.
 Lendo as seguintes colunas: bill_length_mm, bill_depth_mm, flipper_length_mm, body_mass_g
 Iniciando K-Means OpenMP GPU
-K-means concluido com sucesso em ___ interacoes
-Tempo total: ___ segundos
-Tempo de offload/transferencia: ___ segundos
+K-means concluido com sucesso em 10 interacoes
+Tempo total: 0.125462111 segundos
+Tempo de offload/transferencia: 0.121175451 segundos
 Clusters salvo: ../../data/processed/results_openmp_gpu.csv
 ```
 
 ## 7. Resultado Gerado
 
-O arquivo de saida esperado e:
+O arquivo de saída é:
 
 ```text
 ../../data/processed/results_openmp_gpu.csv
 ```
 
-Ele deve manter o mesmo formato da versao sequencial:
+Com o mesmo formato das demais versões:
 
 ```csv
 point_id,cluster_id
@@ -114,41 +122,38 @@ point_id,cluster_id
 
 ## 8. Resultados de Desempenho
 
-Preencher a tabela abaixo apos os testes.
-
-| Versao | Tempo total (s) | Tempo de offload/transferencia (s) | Iteracoes | Speedup |
+| Versão | Tempo total (s) | Tempo de offload/transferência (s) | Iterações | Speedup |
 |---|---:|---:|---:|---:|
 | Sequencial | 0.000080000 | - | 9 | 1.00 |
-| OpenMP GPU | _preencher_ | _preencher_ | _preencher_ | _preencher_ |
+| OpenMP GPU | 0.125462111 | 0.121175451 | 10 | 0.000638 |
 
-## 9. Calculo das Metricas
-
-O speedup deve ser calculado por:
+## 9. Cálculo das Métricas
 
 ```text
 speedup = tempo_sequencial / tempo_openmp_gpu
+speedup = 0.000080000 / 0.125462111 ≈ 0.000638
 ```
 
-A eficiencia pode ser calculada por:
-
+O tempo de kernels (execução efetiva na GPU) é calculado como:
 ```text
-eficiencia = speedup / quantidade_total_de_unidades_de_execucao
+tempo_kernels = tempo_total - tempo_offload
+tempo_kernels = 0.125462111 - 0.121175451 = 0.004286660 s
 ```
 
-## 10. Discussao dos Resultados
+A eficiência não é calculada da mesma forma que nas versões CPU, pois o número de threads é gerenciado automaticamente pelo runtime OpenMP (nvptx-none) com base no hardware disponível.
 
-Preencher apos os testes.
+## 10. Discussão dos Resultados
 
-Pontos a discutir:
+- Os clusters gerados são idênticos aos da versão CUDA, e diferem do sequencial apenas no ponto ID 328. Isso é esperado: a ordem das operações atômicas em paralelo muda o acúmulo dos centróides da mesma forma nas duas versões GPU.
 
-1. Se os clusters ficaram equivalentes aos da versao sequencial.
-2. Impacto da transferencia CPU-GPU.
-3. Facilidade de implementacao em comparacao com CUDA.
-4. Desempenho obtido em relacao a versao sequencial.
-5. Desempenho obtido em relacao a versao CUDA.
+- O tempo de offload/transferência dominou com 96,6% do total, o mesmo padrão da versão CUDA (98,8%). Para 333 pontos, o custo de inicializar o contexto GPU e transferir dados pelo PCIe é muito maior que o tempo de computação em si.
 
-## 11. Conclusao
+- Comparando com CUDA: o tempo total do OpenMP GPU foi menor (0.1255s vs 0.1581s), mas o tempo dos kernels foi maior (0.0043s vs 0.0014s). O CUDA é mais eficiente nos kernels, mas tem mais overhead de alocação de memória com cudaMalloc.
 
-Preencher apos a implementacao e execucao dos testes.
+- A implementação com diretivas foi bem mais simples que CUDA: sem escrever kernels, sem configurar blocos/grids, sem API CUDA. A estrutura do código ficou próxima ao sequencial.
 
-A conclusao deve indicar se o OpenMP GPU foi vantajoso para este problema, quais gargalos apareceram e se a abordagem por diretivas foi suficiente para obter bom desempenho.
+## 11. Conclusão
+
+Para o dataset Penguins (333 pontos), a versão GPU não trouxe ganho nenhum sobre a sequencial, o que era esperado dado o tamanho da entrada. O overhead de inicialização e comunicação GPU domina completamente o tempo de execução.
+
+A comparação com CUDA mostrou que o OpenMP GPU é uma alternativa viável quando a simplicidade de código importa mais que o desempenho dos kernels em si.

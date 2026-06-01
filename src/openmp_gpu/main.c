@@ -144,8 +144,8 @@ int main() {
     }
 
     printf("K-means concluido com sucesso em %d interacoes\n", iterations);
-    printf("Wall Clock Time: %.9f segundos\n", end - start);
-    printf("Tempo de transferencia CPU-GPU: %.9f segundos\n", transfer_time);
+    printf("Tempo total: %.9f segundos\n", end - start);
+    printf("Tempo de offload/transferencia: %.9f segundos\n", transfer_time);
 
     if (save_results(output_file, labels, num_points) == 0) {
         printf("Clusters salvo: %s\n", output_file);
