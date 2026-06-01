@@ -138,7 +138,7 @@ extern "C" int run_kmeans_cuda(
     int iteracao_atual = 0;
     int convergencia_alcancada = 0;
 
-    printf("Iniciando K-Means (CUDA com AtomicAdd)\n");
+    printf("Iniciando K-Means CUDA\n");
 
     while (iteracao_atual < iteracoes_maximas && !convergencia_alcancada) {
         int mudancas_nesta_iteracao = 0;
@@ -181,7 +181,7 @@ extern "C" int run_kmeans_cuda(
         iteracao_atual++;
     }
 
-    printf("K-means (CUDA) concluido com sucesso em %d interacoes\n", iteracao_atual);
+    printf("K-means concluido com sucesso em %d interacoes\n", iteracao_atual);
     fflush(stdout); 
 
     // No final, trazemos a resposta definitiva (labels e novos centroides) de volta para a CPU

@@ -113,7 +113,7 @@ Carregou 333 pontos com 4 features.
 Lendo as seguintes colunas: bill_length_mm, bill_depth_mm, flipper_length_mm, body_mass_g
 Iniciando K-Means
 K-means concluido com sucesso em 9 interacoes
-Wall Clock Time: 0.000074000 segundos
+Wall Clock Time: 0.000080000 segundos
 Clusters salvo: ../../data/processed/results_sequencial.csv
 ```
 
@@ -166,16 +166,62 @@ Comparando os clusters com a coluna `species` do dataset tratado, obteve-se:
 
 Essa comparacao nao e usada pelo algoritmo durante o treinamento. Ela serve apenas para interpretar o resultado depois da execucao.
 
-## 9. Discussao dos Resultados
+## 9. Calculo das Metricas
+
+Valores usados:
+
+| Metrica base | Valor |
+|---|---:|
+| Pontos processados | 333 |
+| Features | 4 |
+| Iteracoes | 9 |
+| Tempo sequencial | 0.000080000 s |
+| Unidades de execucao | 1 |
+
+No sequencial, nao existe tempo paralelo. O tempo medido aqui e usado como base para comparar as outras versoes:
+
+```text
+T1 = tempo_sequencial = 0.000080000 s
+```
+
+Como esta versao e a referencia, o speedup fica:
+
+```text
+speedup = T1 / T1
+speedup = 0.000080000 / 0.000080000
+speedup = 1.00
+```
+
+Como a execucao usa apenas uma unidade de execucao, a eficiencia fica:
+
+```text
+eficiencia = 1.00 / 1
+eficiencia = 1.00
+```
+
+As metricas de escalabilidade forte e fraca ficam para as versoes paralelas, variando processos, threads ou recursos de GPU.
+
+Outras medidas derivadas:
+
+```text
+tempo_por_iteracao = tempo_total / iteracoes
+tempo_por_iteracao = 0.000080000 / 9
+tempo_por_iteracao = 0.000008889 s
+
+tempo_por_ponto = tempo_total / pontos
+tempo_por_ponto = 0.000080000 / 333
+tempo_por_ponto = 0.000000240 s
+```
+
+## 10. Discussao dos Resultados
 
 O cluster 0 agrupou todos os pontos da especie Gentoo presentes no dataset tratado. Isso indica que, com os atributos numericos selecionados, os pinguins Gentoo ficaram bem separados das demais especies no espaco de caracteristicas.
 
 Os clusters 1 e 2 dividiram principalmente as especies Adelie e Chinstrap. O cluster 1 concentrou a maior parte dos Adelie, enquanto o cluster 2 concentrou a maior parte dos Chinstrap. Ainda assim, houve mistura entre essas duas especies, especialmente com 30 pinguins Adelie no cluster 2 e 8 Chinstrap no cluster 1.
 
 
-## 10. Conclusao
+## 11. Conclusao
 
 A implementacao sequencial executa corretamente o fluxo basico do K-means: leitura dos dados, inicializacao dos centroides, atribuicao dos pontos aos clusters, atualizacao dos centroides, criterio de parada e escrita dos resultados.
 
 Como baseline, esta versao e fundamental para o restante do projeto. As versoes paralelas devem produzir agrupamentos equivalentes ou muito proximos e reduzir o tempo de execucao quando aplicadas a entradas maiores ou a cargas de trabalho mais pesadas.
-

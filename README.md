@@ -55,6 +55,37 @@ As implementações serão comparadas usando:
 - impacto da transferência de dados entre CPU e GPU;
 - qualidade/estabilidade dos agrupamentos.
 
+## Cálculo das Métricas
+
+O script `scripts/calculate_metrics.py` pode ser usado para calcular speedup, eficiência, tempo por iteração e tempo por ponto.
+
+Para rodar de forma interativa:
+
+```bash
+python3 scripts/calculate_metrics.py
+```
+
+Também é possível passar os valores diretamente:
+
+```bash
+python3 scripts/calculate_metrics.py \
+  --baseline 0.000080000 \
+  --time 0.000080000 \
+  --units 1 \
+  --iterations 9 \
+  --points 333
+```
+
+Onde:
+
+| Parâmetro | Significado |
+|---|---|
+| `--baseline` | Tempo da versão sequencial |
+| `--time` | Tempo da versão testada |
+| `--units` | Total de processos/threads usados |
+| `--iterations` | Quantidade de iterações do K-means |
+| `--points` | Quantidade de pontos processados |
+
 ## Estrutura do Projeto
 
 ```text
