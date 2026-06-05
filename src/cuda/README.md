@@ -53,15 +53,14 @@ O fluxo esperado e:
 
 ## 4. Organizacao do Codigo
 
-Preencher quando a implementacao CUDA estiver pronta.
-
 | Arquivo | Funcao |
 |---|---|
 | `main.cu` | Ponto de entrada da versao CUDA |
+| `cuda_kmeans.cu` | Kernels CUDA e funcao principal da execucao em GPU |
 | `Makefile` | Compilacao com `nvcc` |
 | `../utils/dataset_config.h` | Configuracao do dataset, numero de clusters e features |
 | `../utils/io_utils.c` | Leitura do CSV e escrita dos resultados |
-| `../utils/math_utils.c` | Funcoes auxiliares compartilhadas, se aplicavel |
+| `../utils/math_utils.c` | Inicializacao dos centroides e funcoes auxiliares compartilhadas |
 
 ## 5. Como Compilar e Rodar
 
@@ -79,24 +78,22 @@ Para limpar os arquivos gerados:
 make clean
 ```
 
-Caso a compilacao seja feita diretamente com `nvcc`, registrar aqui o comando final usado:
+Exemplo de compilacao direta com `nvcc`:
 
 ```bash
-nvcc main.cu ../utils/io_utils.c -o kmeans_cuda -lm
+nvcc -O3 -arch=sm_61 main.cu cuda_kmeans.cu ../utils/io_utils.c ../utils/math_utils.c -o kmeans_cuda
 ```
 
 ## 6. Saida Esperada
 
-Preencher esta secao com a saida real do terminal apos a execucao.
-
 ```text
-Carregou ___ pontos com ___ features.
+Carregou 333 pontos com 4 features.
 Lendo as seguintes colunas: bill_length_mm, bill_depth_mm, flipper_length_mm, body_mass_g
 Iniciando K-Means CUDA
-K-means concluido com sucesso em ___ interacoes
-Tempo total: ___ segundos
-Tempo dos kernels: ___ segundos
-Tempo de transferencia CPU-GPU: ___ segundos
+K-means concluido com sucesso em 10 interacoes
+Tempo total: 0.158066884 segundos
+Tempo dos kernels: 0.001422059 segundos
+Tempo de transferencia CPU-GPU: 0.156229382 segundos
 Clusters salvo: ../../data/processed/results_cuda.csv
 ```
 
@@ -119,12 +116,10 @@ point_id,cluster_id
 
 ## 8. Resultados de Desempenho
 
-Preencher a tabela abaixo apos a execucao.
-
-| Versao | Tempo total (s) | Tempo dos kernels (s) | Tempo de transferencia (s) | Iteracoes |
-|---|---:|---:|---:|---:|
-| Sequencial | 0.000080000 | - | - | 9 |
-| CUDA | _preencher_ | _preencher_ | _preencher_ | _preencher_ |
+| Versao | Tempo total (s) | Tempo dos kernels (s) | Tempo de transferencia (s) | Iteracoes | Speedup |
+|---|---:|---:|---:|---:|---:|
+| Sequencial | 0.000080000 | - | - | 9 | 1.00 |
+| CUDA | 0.158066884 | 0.001422059 | 0.156229382 | 10 | 0.000506 |
 
 ## 9. Calculo das Metricas
 
@@ -132,29 +127,29 @@ O speedup deve ser calculado por:
 
 ```text
 speedup = tempo_sequencial / tempo_cuda
+speedup = 0.000080000 / 0.158066884
+speedup = 0.000506
 ```
 
 A eficiencia pode ser calculada por:
 
 ```text
 eficiencia = speedup / quantidade_total_de_unidades_de_execucao
+eficiencia = 0.000506 / 512
+eficiencia = 0.000000988
 ```
 
 
 ## 10. Discussao dos Resultados
 
-Preencher apos os testes.
+Os clusters gerados pela versao CUDA ficaram 99,7% iguais aos da versao sequencial. A diferenca ocorreu em apenas um ponto, o ID 328, que ficou no cluster 1 na GPU e no cluster 2 no sequencial. Essa diferenca pequena e esperada em execucoes paralelas com ponto flutuante, pois a ordem das somas pode alterar levemente os centroides.
 
-Pontos a discutir:
+O tempo total foi maior que o sequencial porque o dataset tem apenas 333 pontos. Nesse tamanho, o custo de inicializar a GPU e transferir dados pesa mais do que o ganho do paralelismo. A transferencia CPU-GPU representou aproximadamente 98,8% do tempo total, enquanto os kernels ficaram com cerca de 0,9%.
 
-1. Se a versao CUDA produziu clusters equivalentes aos da versao sequencial.
-2. Se o tempo total melhorou ou piorou em relacao ao sequencial.
-3. Quanto da execucao foi gasto em kernels.
-4. Quanto da execucao foi gasto em transferencia CPU-GPU.
-5. Se o tamanho do dataset foi suficiente para justificar o uso da GPU.
+Comparando com OpenMP GPU, a versao CUDA teve kernels mais rapidos, mas tempo total maior. O OpenMP GPU executou em 0.125462111 s, enquanto CUDA executou em 0.158066884 s. Mesmo assim, CUDA teve menor tempo de kernels: 0.001422059 s contra 0.004286660 s no OpenMP GPU.
 
 ## 11. Conclusao
 
-Preencher apos a implementacao e execucao dos testes.
+A versao CUDA executa o K-means na GPU e produz resultado quase identico ao sequencial. Para o dataset Penguins, ela nao trouxe ganho de desempenho por causa do tamanho pequeno da entrada e do alto custo de transferencia CPU-GPU.
 
-A conclusao deve indicar se a versao CUDA trouxe ganho real de desempenho, quais foram os principais gargalos e em quais condicoes a abordagem em GPU tende a ser mais vantajosa.
+Essa versao tende a ser mais vantajosa em datasets maiores, nos quais o custo de transferencia passa a ser compensado pelo volume de calculo paralelo nos kernels.

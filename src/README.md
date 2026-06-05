@@ -52,23 +52,23 @@ Este arquivo centraliza os checklists das implementacoes em `src/`.
 
 ### Checklist
 
-- [ ] Adaptar estruturas de dados para offload
-- [ ] Enviar dados e centroides para GPU
-- [ ] Paralelizar atribuicao dos pontos aos clusters
-- [ ] Atualizar centroides
-- [ ] Medir impacto da transferencia CPU-GPU
+- [x] Adaptar estruturas de dados para offload
+- [x] Enviar dados e centroides para GPU
+- [x] Paralelizar atribuicao dos pontos aos clusters
+- [x] Atualizar centroides
+- [x] Medir impacto da transferencia CPU-GPU
 
 ### Metricas
 
-- [ ] Medir tempo de execucao
-- [ ] Calcular speedup
+- [x] Medir tempo de execucao
+- [x] Calcular speedup
 - [ ] Calcular eficiencia
 - [ ] Avaliar escalabilidade forte
 - [ ] Avaliar escalabilidade fraca
 - [ ] Discutir overhead de comunicacao no MPI
 - [ ] Discutir balanceamento de carga
-- [ ] Comparar OpenMP GPU e CUDA
-- [ ] Discutir impacto da transferencia CPU-GPU
+- [x] Comparar OpenMP GPU e CUDA
+- [x] Discutir impacto da transferencia CPU-GPU
 
 ## CUDA
 
@@ -83,11 +83,11 @@ Este arquivo centraliza os checklists das implementacoes em `src/`.
 ### Metricas
 
 - [x] Medir tempo de execucao
-- [ ] Calcular speedup
-- [ ] Calcular eficiencia
+- [x] Calcular speedup
+- [x] Calcular eficiencia
 - [ ] Avaliar escalabilidade forte
 - [ ] Avaliar escalabilidade fraca
 - [ ] Discutir overhead de comunicacao no MPI
 - [ ] Discutir balanceamento de carga
-- [ ] Comparar OpenMP GPU e CUDA
-- [ ] Discutir impacto da transferencia CPU-GPU
+- [x] Comparar OpenMP GPU e CUDA
+- [x] Discutir impacto da transferencia CPU-GPU
