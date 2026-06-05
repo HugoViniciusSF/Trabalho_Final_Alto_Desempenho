@@ -1,52 +1,52 @@
-# TO DO das Implementacoes
+# TO DO das Implementações
 
-Este arquivo centraliza os checklists das implementacoes em `src/`.
+Este arquivo centraliza os checklists das implementações em `src/`.
 
 ## Sequencial
 
 ### Checklist
 
 - [x] Ler arquivo CSV em C
-- [x] Armazenar os dados em matriz numerica
+- [x] Armazenar os dados em matriz numérica
 - [x] Inicializar centroides
-- [x] Calcular distancia euclidiana
+- [x] Calcular distância euclidiana
 - [x] Atualizar clusters
-- [x] Definir criterio de parada
+- [x] Definir critério de parada
 
-### Metricas
+### Métricas
 
-- [x] Medir tempo de execucao
+- [x] Medir tempo de execução
 - [x] Calcular speedup
-- [x] Calcular eficiencia
+- [x] Calcular eficiência
 - [ ] Avaliar escalabilidade forte
 - [ ] Avaliar escalabilidade fraca
-- [ ] Discutir overhead de comunicacao no MPI
+- [ ] Discutir overhead de comunicação no MPI
 - [ ] Discutir balanceamento de carga
 - [ ] Comparar OpenMP GPU e CUDA
-- [ ] Discutir impacto da transferencia CPU-GPU
+- [ ] Discutir impacto da transferência CPU-GPU
 
 ## MPI + OpenMP
 
 ### Checklist
 
 - [ ] Dividir dados entre processos MPI
-- [ ] Paralelizar calculo de distancias com OpenMP
+- [ ] Paralelizar cálculo de distâncias com OpenMP
 - [ ] Sincronizar somas parciais dos centroides com MPI
 - [ ] Atualizar centroides globalmente
-- [ ] Testar diferentes numeros de processos MPI
-- [ ] Testar diferentes numeros de threads OpenMP
+- [ ] Testar diferentes números de processos MPI
+- [ ] Testar diferentes números de threads OpenMP
 
-### Metricas
+### Métricas
 
-- [ ] Medir tempo de execucao
+- [ ] Medir tempo de execução
 - [ ] Calcular speedup
-- [ ] Calcular eficiencia
+- [ ] Calcular eficiência
 - [ ] Avaliar escalabilidade forte
 - [ ] Avaliar escalabilidade fraca
-- [ ] Discutir overhead de comunicacao no MPI
+- [ ] Discutir overhead de comunicação no MPI
 - [ ] Discutir balanceamento de carga
 - [ ] Comparar OpenMP GPU e CUDA
-- [ ] Discutir impacto da transferencia CPU-GPU
+- [ ] Discutir impacto da transferência CPU-GPU
 
 ## OpenMP GPU
 
@@ -54,40 +54,40 @@ Este arquivo centraliza os checklists das implementacoes em `src/`.
 
 - [x] Adaptar estruturas de dados para offload
 - [x] Enviar dados e centroides para GPU
-- [x] Paralelizar atribuicao dos pontos aos clusters
+- [x] Paralelizar atribuição dos pontos aos clusters
 - [x] Atualizar centroides
-- [x] Medir impacto da transferencia CPU-GPU
+- [x] Medir impacto da transferência CPU-GPU
 
-### Metricas
+### Métricas
 
-- [x] Medir tempo de execucao
+- [x] Medir tempo de execução
 - [x] Calcular speedup
-- [ ] Calcular eficiencia
+- [ ] Calcular eficiência
 - [ ] Avaliar escalabilidade forte
 - [ ] Avaliar escalabilidade fraca
-- [ ] Discutir overhead de comunicacao no MPI
+- [ ] Discutir overhead de comunicação no MPI
 - [ ] Discutir balanceamento de carga
 - [x] Comparar OpenMP GPU e CUDA
-- [x] Discutir impacto da transferencia CPU-GPU
+- [x] Discutir impacto da transferência CPU-GPU
 
 ## CUDA
 
 ### Checklist
 
-- [X] Criar kernel para calculo de distancias
-- [x] Criar kernel ou rotina para atribuicao dos clusters
+- [x] Criar kernel para cálculo de distâncias
+- [x] Criar kernel ou rotina para atribuição dos clusters
 - [x] Atualizar centroides
-- [x] Gerenciar alocacao e copia de memoria CPU-GPU
+- [x] Gerenciar alocação e cópia de memória CPU-GPU
 - [x] Medir tempo total e tempo de kernels
 
-### Metricas
+### Métricas
 
-- [x] Medir tempo de execucao
+- [x] Medir tempo de execução
 - [x] Calcular speedup
-- [x] Calcular eficiencia
+- [x] Calcular eficiência
 - [ ] Avaliar escalabilidade forte
 - [ ] Avaliar escalabilidade fraca
-- [ ] Discutir overhead de comunicacao no MPI
+- [ ] Discutir overhead de comunicação no MPI
 - [ ] Discutir balanceamento de carga
 - [x] Comparar OpenMP GPU e CUDA
-- [x] Discutir impacto da transferencia CPU-GPU
+- [x] Discutir impacto da transferência CPU-GPU

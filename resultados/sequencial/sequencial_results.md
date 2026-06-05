@@ -1,6 +1,6 @@
-# Resultados da Execucao Sequencial
+# Resultados da Execução Sequencial
 
-## Saida do Terminal
+## Saída do Terminal
 
 ```text
 Carregou 333 pontos com 4 features.
@@ -11,20 +11,20 @@ Wall Clock Time: 0.000080000 segundos
 Clusters salvo: ../../data/processed/results_sequencial.csv
 ```
 
-## Observacao
+## Observação
 
-A execucao utilizou o dataset tratado `data/processed/penguins_clean.csv`, com 333 pontos e 4 atributos numericos. O arquivo gerado com os clusters foi salvo em `data/processed/results_sequencial.csv`.
+A execução utilizou o dataset tratado `data/processed/penguins_clean.csv`, com 333 pontos e 4 atributos numéricos. O arquivo gerado com os clusters foi salvo em `data/processed/results_sequencial.csv`.
 
-## Metricas Calculadas
+## Métricas Calculadas
 
-O tempo sequencial e a base da comparacao. Como esta versao nao usa paralelismo, o speedup e a eficiencia ficam em 1.00.
+O tempo sequencial é a base da comparação. Como esta versão não usa paralelismo, o speedup e a eficiência ficam em 1.00.
 
-| Metrica | Valor |
+| Métrica | Valor |
 |---|---:|
 | Tempo sequencial | 0.000080000 s |
-| Iteracoes | 9 |
+| Iterações | 9 |
 | Processos/threads usados | 1 |
 | Speedup | 1.00 |
-| Eficiencia | 1.00 |
-| Tempo por iteracao | 0.000008889 s |
+| Eficiência | 1.00 |
+| Tempo por iteração | 0.000008889 s |
 | Tempo por ponto | 0.000000240 s |

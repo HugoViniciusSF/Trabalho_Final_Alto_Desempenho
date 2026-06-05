@@ -1,74 +1,74 @@
 ## Resumo
 
-Esta versao tem como objetivo implementar o K-means usando paralelismo hibrido em CPU. O MPI deve ser usado para distribuir os dados entre processos, enquanto o OpenMP deve explorar paralelismo com threads dentro de cada processo.
+Esta versão tem como objetivo implementar o K-means usando paralelismo híbrido em CPU. O MPI deve ser usado para distribuir os dados entre processos, enquanto o OpenMP deve explorar paralelismo com threads dentro de cada processo.
 
-A ideia e comparar esta abordagem com a versao sequencial, avaliando tempo de execucao, speedup, eficiencia, escalabilidade e custos de comunicacao.
+A ideia é comparar esta abordagem com a versão sequencial, avaliando tempo de execução, speedup, eficiência, escalabilidade e custos de comunicação.
 
 ## 1. Objetivo
 
-O objetivo desta etapa e dividir o trabalho do K-means entre varios processos MPI e, dentro de cada processo, paralelizar o calculo das distancias com OpenMP.
+O objetivo desta etapa é dividir o trabalho do K-means entre vários processos MPI e, dentro de cada processo, paralelizar o cálculo das distâncias com OpenMP.
 
-Essa versao deve responder principalmente:
+Essa versão deve responder principalmente:
 
-1. Quanto desempenho e ganho ao aumentar o numero de processos MPI?
-2. Quanto desempenho e ganho ao aumentar o numero de threads OpenMP?
-3. Qual o impacto da comunicacao entre processos na atualizacao dos centroides?
-4. A versao hibrida produz clusters equivalentes aos da versao sequencial?
+1. Quanto desempenho é ganho ao aumentar o número de processos MPI?
+2. Quanto desempenho é ganho ao aumentar o número de threads OpenMP?
+3. Qual o impacto da comunicação entre processos na atualização dos centroides?
+4. A versão híbrida produz clusters equivalentes aos da versão sequencial?
 
 ## 2. Entrada de Dados
 
-O arquivo de entrada esperado e:
+O arquivo de entrada esperado é:
 
 ```text
 ../../data/processed/penguins_clean.csv
 ```
 
-As features usadas devem ser as mesmas da versao sequencial:
+As features usadas devem ser as mesmas da versão sequencial:
 
-| Atributo | Descricao |
+| Atributo | Descrição |
 |---|---|
 | `bill_length_mm` | Comprimento do bico |
 | `bill_depth_mm` | Profundidade do bico |
 | `flipper_length_mm` | Comprimento da nadadeira |
 | `body_mass_g` | Massa corporal |
 
-## 3. Estrategia de Paralelizacao
+## 3. Estratégia de Paralelização
 
-Nesta versao, o dataset deve ser dividido entre processos MPI. Cada processo fica responsavel por uma parte dos pontos. Dentro de cada processo, OpenMP pode paralelizar o loop que calcula as distancias entre pontos locais e centroides.
+Nesta versão, o dataset deve ser dividido entre processos MPI. Cada processo fica responsável por uma parte dos pontos. Dentro de cada processo, OpenMP pode paralelizar o loop que calcula as distâncias entre pontos locais e centroides.
 
-O fluxo esperado e:
+O fluxo esperado é:
 
-1. Processo principal le o CSV tratado.
-2. Os pontos sao distribuidos entre os processos MPI.
+1. Processo principal lê o CSV tratado.
+2. Os pontos são distribuídos entre os processos MPI.
 3. Todos os processos recebem os centroides atuais.
-4. Cada processo calcula localmente o cluster mais proximo para seus pontos.
+4. Cada processo calcula localmente o cluster mais próximo para seus pontos.
 5. Cada processo calcula somas parciais e quantidades locais por cluster.
 6. MPI combina as somas parciais para formar os novos centroides globais.
-7. O processo se repete ate convergir ou atingir o limite maximo de iteracoes.
-8. Os labels finais sao reunidos e salvos em CSV.
+7. O processo se repete até convergir ou atingir o limite máximo de iterações.
+8. Os labels finais são reunidos e salvos em CSV.
 
-## 4. Organizacao do Codigo
+## 4. Organização do Código
 
-Preencher quando a implementacao MPI + OpenMP estiver pronta.
+Preencher quando a implementação MPI + OpenMP estiver pronta.
 
-| Arquivo | Funcao |
+| Arquivo | Função |
 |---|---|
-| `main.c` | Ponto de entrada da versao hibrida |
-| `Makefile` | Compilacao com MPI e OpenMP |
-| `../utils/dataset_config.h` | Configuracao do dataset, numero de clusters e features |
+| `main.c` | Ponto de entrada da versão híbrida |
+| `Makefile` | Compilação com MPI e OpenMP |
+| `../utils/dataset_config.h` | Configuração do dataset, número de clusters e features |
 | `../utils/io_utils.c` | Leitura do CSV e escrita dos resultados |
-| `../utils/math_utils.c` | Funcoes auxiliares compartilhadas, se aplicavel |
+| `../utils/math_utils.c` | Funções auxiliares compartilhadas, se aplicável |
 
 ## 5. Como Compilar e Rodar
 
-Com o Makefile criado, a execucao deve seguir o modelo:
+Com o Makefile criado, a execução deve seguir o modelo:
 
 ```bash
 cd "../PROJETO_FINAL_ALTO_DESEMPENHO/src/mpi_openmp"
 make
 ```
 
-Exemplo de execucao com 2 processos MPI e 4 threads OpenMP por processo:
+Exemplo de execução com 2 processos MPI e 4 threads OpenMP por processo:
 
 ```bash
 OMP_NUM_THREADS=4 mpirun -np 2 ./kmeans_mpi_openmp
@@ -80,9 +80,9 @@ Para limpar os arquivos gerados:
 make clean
 ```
 
-## 6. Saida Esperada
+## 6. Saída Esperada
 
-Preencher esta secao com a saida real do terminal apos a execucao.
+Preencher esta seção com a saída real do terminal após a execução.
 
 ```text
 Carregou ___ pontos com ___ features.
@@ -96,13 +96,13 @@ Clusters salvo: ../../data/processed/results_mpi_openmp.csv
 
 ## 7. Resultado Gerado
 
-O arquivo de saida esperado e:
+O arquivo de saída esperado é:
 
 ```text
 ../../data/processed/results_mpi_openmp.csv
 ```
 
-Ele deve manter o mesmo formato da versao sequencial:
+Ele deve manter o mesmo formato da versão sequencial:
 
 ```csv
 point_id,cluster_id
@@ -113,14 +113,14 @@ point_id,cluster_id
 
 ## 8. Resultados de Desempenho
 
-Preencher a tabela abaixo apos os testes.
+Preencher a tabela abaixo após os testes.
 
-| Processos MPI | Threads por processo | Total de threads | Tempo (s) | Iteracoes | Speedup | Eficiencia |
+| Processos MPI | Threads por processo | Total de threads | Tempo (s) | Iterações | Speedup | Eficiência |
 |---:|---:|---:|---:|---:|---:|---:|
 | 1 | 1 | 1 | 0.000080000 | 9 | 1.00 | 1.00 |
 | _preencher_ | _preencher_ | _preencher_ | _preencher_ | _preencher_ | _preencher_ | _preencher_ |
 
-## 9. Calculo das Metricas
+## 9. Cálculo das Métricas
 
 O speedup deve ser calculado por:
 
@@ -128,32 +128,32 @@ O speedup deve ser calculado por:
 speedup = tempo_sequencial / tempo_paralelo
 ```
 
-A eficiencia pode ser calculada por:
+A eficiência pode ser calculada por:
 
 ```text
 eficiencia = speedup / quantidade_total_de_unidades_de_execucao
 ```
 
-Na versao hibrida, a quantidade total de unidades de execucao pode ser considerada como:
+Na versão híbrida, a quantidade total de unidades de execução pode ser considerada como:
 
 ```text
 processos_mpi * threads_openmp_por_processo
 ```
 
-## 10. Discussao dos Resultados
+## 10. Discussão dos Resultados
 
-Preencher apos os testes.
+Preencher após os testes.
 
 Pontos a discutir:
 
 1. Impacto do aumento de processos MPI.
 2. Impacto do aumento de threads OpenMP.
-3. Custo de comunicacao na sincronizacao dos centroides.
+3. Custo de comunicação na sincronização dos centroides.
 4. Balanceamento de carga entre processos.
-5. Comparacao dos clusters com a versao sequencial.
+5. Comparação dos clusters com a versão sequencial.
 
-## 11. Conclusao
+## 11. Conclusão
 
-Preencher apos a implementacao e execucao dos testes.
+Preencher após a implementação e execução dos testes.
 
-A conclusao deve indicar se a abordagem hibrida trouxe ganho de desempenho, em quais configuracoes o ganho foi melhor e quais fatores limitaram a escalabilidade.
+A conclusão deve indicar se a abordagem híbrida trouxe ganho de desempenho, em quais configurações o ganho foi melhor e quais fatores limitaram a escalabilidade.

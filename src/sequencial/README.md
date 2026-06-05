@@ -1,78 +1,78 @@
 ## Resumo
 
-Esta versao implementa o algoritmo K-means de forma sequencial, usando apenas uma CPU e uma unica linha de execucao. Ela serve como baseline do projeto, ou seja, como referencia para comparar as versoes paralelas com MPI, OpenMP, OpenMP GPU e CUDA.
+Esta versão implementa o algoritmo K-means de forma sequencial, usando apenas uma CPU e uma única linha de execução. Ela serve como baseline do projeto, ou seja, como referência para comparar as versões paralelas com MPI, OpenMP, OpenMP GPU e CUDA.
 
-O programa le o dataset tratado dos pinguins, seleciona quatro atributos numericos normalizados, inicializa tres centroides e executa o K-means ate a convergencia ou ate atingir o limite maximo de iteracoes. Ao final, salva em um arquivo CSV o cluster atribuido a cada ponto do dataset.
+O programa lê o dataset tratado dos pinguins, seleciona quatro atributos numéricos normalizados, inicializa três centroides e executa o K-means até a convergência ou até atingir o limite máximo de iterações. Ao final, salva em um arquivo CSV o cluster atribuído a cada ponto do dataset.
 
 ## 1. Objetivo
 
-O objetivo desta etapa e construir uma versao correta e reprodutivel do K-means antes de paralelizar o algoritmo. Essa versao mede o tempo apenas da etapa principal de agrupamento, isto e, da chamada de `run_kmeans`, sem incluir o tempo de leitura do arquivo CSV e escrita dos resultados.
+O objetivo desta etapa é construir uma versão correta e reprodutível do K-means antes de paralelizar o algoritmo. Essa versão mede o tempo apenas da etapa principal de agrupamento, isto é, da chamada de `run_kmeans`, sem incluir o tempo de leitura do arquivo CSV e escrita dos resultados.
 
-Essa separacao e importante porque as outras implementacoes devem ser comparadas pelo custo computacional do algoritmo, e nao pelo custo de entrada e saida de arquivos.
+Essa separação é importante porque as outras implementações devem ser comparadas pelo custo computacional do algoritmo, e não pelo custo de entrada e saída de arquivos.
 
 ## 2. Entrada de Dados
 
-O arquivo de entrada e:
+O arquivo de entrada é:
 
 ```text
 ../../data/processed/penguins_clean.csv
 ```
 
-O caminho acima e relativo a pasta `src/sequencial`, por isso o executavel deve ser rodado a partir dessa pasta.
+O caminho acima é relativo à pasta `src/sequencial`, por isso o executável deve ser rodado a partir dessa pasta.
 
-As colunas usadas pelo K-means estao definidas em `src/utils/dataset_config.h`:
+As colunas usadas pelo K-means estão definidas em `src/utils/dataset_config.h`:
 
-| Atributo | Descricao |
+| Atributo | Descrição |
 |---|---|
 | `bill_length_mm` | Comprimento do bico |
 | `bill_depth_mm` | Profundidade do bico |
 | `flipper_length_mm` | Comprimento da nadadeira |
 | `body_mass_g` | Massa corporal |
 
-Essas colunas ja foram normalizadas no pre-processamento, usando escala Min-Max entre 0 e 1. A normalizacao e necessaria porque o K-means usa distancia euclidiana; sem normalizar, atributos com escala maior, como massa corporal, teriam peso excessivo no calculo das distancias.
+Essas colunas já foram normalizadas no pré-processamento, usando escala Min-Max entre 0 e 1. A normalização é necessária porque o K-means usa distância euclidiana; sem normalizar, atributos com escala maior, como massa corporal, teriam peso excessivo no cálculo das distâncias.
 
 ## 3. Funcionamento do K-means
 
-O K-means e um algoritmo de agrupamento nao supervisionado. Isso significa que ele nao usa diretamente a coluna `species` para aprender. Em vez disso, ele tenta separar os pontos em grupos com base na similaridade numerica entre as medidas dos pinguins.
+O K-means é um algoritmo de agrupamento não supervisionado. Isso significa que ele não usa diretamente a coluna `species` para aprender. Em vez disso, ele tenta separar os pontos em grupos com base na similaridade numérica entre as medidas dos pinguins.
 
-Nesta implementacao, o numero de clusters e:
+Nesta implementação, o número de clusters é:
 
 ```c
 #define NUM_CLUSTERS 3
 ```
 
-O valor 3 foi escolhido porque o dataset possui tres especies de pinguins. Mesmo assim, os clusters gerados pelo algoritmo nao recebem automaticamente os nomes das especies. Eles sao apenas identificadores numericos: `0`, `1` e `2`.
+O valor 3 foi escolhido porque o dataset possui três espécies de pinguins. Mesmo assim, os clusters gerados pelo algoritmo não recebem automaticamente os nomes das espécies. Eles são apenas identificadores numéricos: `0`, `1` e `2`.
 
 O fluxo do algoritmo é:
 
 1. Ler os pontos do CSV tratado.
-2. Inicializar os centroides escolhendo pontos aleatorios do dataset.
-3. Para cada ponto, calcular a distancia euclidiana ate cada centroide.
-4. Atribuir o ponto ao cluster do centroide mais proximo.
-5. Recalcular cada centroide usando a media dos pontos do cluster.
-6. Repetir ate que nenhum ponto mude de cluster ou ate atingir 100 iteracoes.
+2. Inicializar os centroides escolhendo pontos aleatórios do dataset.
+3. Para cada ponto, calcular a distância euclidiana até cada centroide.
+4. Atribuir o ponto ao cluster do centroide mais próximo.
+5. Recalcular cada centroide usando a média dos pontos do cluster.
+6. Repetir até que nenhum ponto mude de cluster ou até atingir 100 iterações.
 
-Para garantir reprodutibilidade, a inicializacao dos centroides usa semente fixa:
+Para garantir reprodutibilidade, a inicialização dos centroides usa semente fixa:
 
 ```c
 srand(42);
 ```
 
-Assim, execucoes diferentes tendem a gerar os mesmos centroides iniciais e os mesmos agrupamentos, desde que o dataset de entrada nao mude.
+Assim, execuções diferentes tendem a gerar os mesmos centroides iniciais e os mesmos agrupamentos, desde que o dataset de entrada não mude.
 
-## 4. Organizacao do Codigo
+## 4. Organização do Código
 
-| Arquivo | Funcao |
+| Arquivo | Função |
 |---|---|
-| `main.c` | Controla a execucao: le o dataset, inicializa estruturas, mede tempo, roda o K-means e salva resultados |
+| `main.c` | Controla a execução: lê o dataset, inicializa estruturas, mede tempo, roda o K-means e salva resultados |
 | `Makefile` | Compila o programa sequencial |
 | `../utils/dataset_config.h` | Define caminho do dataset, quantidade de clusters e features usadas |
 | `../utils/io_utils.c` | Implementa leitura do CSV e escrita do resultado |
-| `../utils/math_utils.c` | Implementa distancia euclidiana, inicializacao dos centroides e loop do K-means |
+| `../utils/math_utils.c` | Implementa distância euclidiana, inicialização dos centroides e loop do K-means |
 
 ## 5. Como Compilar e Rodar
 
-Acesse a pasta da versao sequencial:
+Acesse a pasta da versão sequencial:
 
 ```bash
 cd "../PROJETO_FINAL_ALTO_DESEMPENHO/src/sequencial"
@@ -90,23 +90,23 @@ Execute com:
 ./kmeans_seq
 ```
 
-Para remover o executavel gerado:
+Para remover o executável gerado:
 
 ```bash
 make clean
 ```
 
-Tambem e possivel compilar a partir da raiz do projeto:
+Também é possível compilar a partir da raiz do projeto:
 
 ```bash
 make -C src/sequencial
 ```
 
-Entretanto, a execucao deve ocorrer dentro de `src/sequencial`, porque o caminho do dataset no codigo e relativo a essa pasta.
+Entretanto, a execução deve ocorrer dentro de `src/sequencial`, porque o caminho do dataset no código é relativo a essa pasta.
 
-## 6. Saida Esperada
+## 6. Saída Esperada
 
-Em uma execucao local, o programa apresentou a seguinte saida:
+Em uma execução local, o programa apresentou a seguinte saída:
 
 ```text
 Carregou 333 pontos com 4 features.
@@ -117,11 +117,11 @@ Wall Clock Time: 0.000080000 segundos
 Clusters salvo: ../../data/processed/results_sequencial.csv
 ```
 
-O tempo pode variar entre execucoes e maquinas, mas a ordem de grandeza deve permanecer muito baixa para este dataset, pois ele possui apenas 333 pontos e 4 atributos numericos.
+O tempo pode variar entre execuções e máquinas, mas a ordem de grandeza deve permanecer muito baixa para este dataset, pois ele possui apenas 333 pontos e 4 atributos numéricos.
 
 ## 7. Resultado Gerado
 
-O arquivo de saida e:
+O arquivo de saída é:
 
 ```text
 ../../data/processed/results_sequencial.csv
@@ -131,8 +131,8 @@ Ele possui duas colunas:
 
 | Coluna | Significado |
 |---|---|
-| `point_id` | Indice do ponto no dataset tratado, iniciando em 0 |
-| `cluster_id` | Cluster atribuido pelo K-means ao ponto |
+| `point_id` | Índice do ponto no dataset tratado, iniciando em 0 |
+| `cluster_id` | Cluster atribuído pelo K-means ao ponto |
 
 Exemplo:
 
@@ -146,9 +146,9 @@ point_id,cluster_id
 
 Isso significa que o primeiro ponto do dataset foi classificado no cluster 1, enquanto os pontos 1, 2 e 3 foram classificados no cluster 0.
 
-## 8. Distribuicao dos Clusters
+## 8. Distribuição dos Clusters
 
-Na execucao realizada, os 333 pontos ficaram distribuidos da seguinte forma:
+Na execução realizada, os 333 pontos ficaram distribuídos da seguinte forma:
 
 | Cluster | Quantidade de pontos |
 |---:|---:|
@@ -158,33 +158,33 @@ Na execucao realizada, os 333 pontos ficaram distribuidos da seguinte forma:
 
 Comparando os clusters com a coluna `species` do dataset tratado, obteve-se:
 
-| Especie | Cluster 0 | Cluster 1 | Cluster 2 |
+| Espécie | Cluster 0 | Cluster 1 | Cluster 2 |
 |---|---:|---:|---:|
 | Adelie | 0 | 116 | 30 |
 | Chinstrap | 0 | 8 | 60 |
 | Gentoo | 119 | 0 | 0 |
 
-Essa comparacao nao e usada pelo algoritmo durante o treinamento. Ela serve apenas para interpretar o resultado depois da execucao.
+Essa comparação não é usada pelo algoritmo durante o treinamento. Ela serve apenas para interpretar o resultado depois da execução.
 
-## 9. Calculo das Metricas
+## 9. Cálculo das Métricas
 
 Valores usados:
 
-| Metrica base | Valor |
+| Métrica base | Valor |
 |---|---:|
 | Pontos processados | 333 |
 | Features | 4 |
-| Iteracoes | 9 |
+| Iterações | 9 |
 | Tempo sequencial | 0.000080000 s |
-| Unidades de execucao | 1 |
+| Unidades de execução | 1 |
 
-No sequencial, nao existe tempo paralelo. O tempo medido aqui e usado como base para comparar as outras versoes:
+No sequencial, não existe tempo paralelo. O tempo medido aqui é usado como base para comparar as outras versões:
 
 ```text
 T1 = tempo_sequencial = 0.000080000 s
 ```
 
-Como esta versao e a referencia, o speedup fica:
+Como esta versão é a referência, o speedup fica:
 
 ```text
 speedup = T1 / T1
@@ -192,14 +192,14 @@ speedup = 0.000080000 / 0.000080000
 speedup = 1.00
 ```
 
-Como a execucao usa apenas uma unidade de execucao, a eficiencia fica:
+Como a execução usa apenas uma unidade de execução, a eficiência fica:
 
 ```text
 eficiencia = 1.00 / 1
 eficiencia = 1.00
 ```
 
-As metricas de escalabilidade forte e fraca ficam para as versoes paralelas, variando processos, threads ou recursos de GPU.
+As métricas de escalabilidade forte e fraca ficam para as versões paralelas, variando processos, threads ou recursos de GPU.
 
 Outras medidas derivadas:
 
@@ -213,15 +213,15 @@ tempo_por_ponto = 0.000080000 / 333
 tempo_por_ponto = 0.000000240 s
 ```
 
-## 10. Discussao dos Resultados
+## 10. Discussão dos Resultados
 
-O cluster 0 agrupou todos os pontos da especie Gentoo presentes no dataset tratado. Isso indica que, com os atributos numericos selecionados, os pinguins Gentoo ficaram bem separados das demais especies no espaco de caracteristicas.
+O cluster 0 agrupou todos os pontos da espécie Gentoo presentes no dataset tratado. Isso indica que, com os atributos numéricos selecionados, os pinguins Gentoo ficaram bem separados das demais espécies no espaço de características.
 
-Os clusters 1 e 2 dividiram principalmente as especies Adelie e Chinstrap. O cluster 1 concentrou a maior parte dos Adelie, enquanto o cluster 2 concentrou a maior parte dos Chinstrap. Ainda assim, houve mistura entre essas duas especies, especialmente com 30 pinguins Adelie no cluster 2 e 8 Chinstrap no cluster 1.
+Os clusters 1 e 2 dividiram principalmente as espécies Adelie e Chinstrap. O cluster 1 concentrou a maior parte dos Adelie, enquanto o cluster 2 concentrou a maior parte dos Chinstrap. Ainda assim, houve mistura entre essas duas espécies, especialmente com 30 pinguins Adelie no cluster 2 e 8 Chinstrap no cluster 1.
 
 
-## 11. Conclusao
+## 11. Conclusão
 
-A implementacao sequencial executa corretamente o fluxo basico do K-means: leitura dos dados, inicializacao dos centroides, atribuicao dos pontos aos clusters, atualizacao dos centroides, criterio de parada e escrita dos resultados.
+A implementação sequencial executa corretamente o fluxo básico do K-means: leitura dos dados, inicialização dos centroides, atribuição dos pontos aos clusters, atualização dos centroides, critério de parada e escrita dos resultados.
 
-Como baseline, esta versao e fundamental para o restante do projeto. As versoes paralelas devem produzir agrupamentos equivalentes ou muito proximos e reduzir o tempo de execucao quando aplicadas a entradas maiores ou a cargas de trabalho mais pesadas.
+Como baseline, esta versão é fundamental para o restante do projeto. As versões paralelas devem produzir agrupamentos equivalentes ou muito próximos e reduzir o tempo de execução quando aplicadas a entradas maiores ou a cargas de trabalho mais pesadas.
