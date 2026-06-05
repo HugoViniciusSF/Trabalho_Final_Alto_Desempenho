@@ -91,3 +91,16 @@ Este arquivo centraliza os checklists das implementações em `src/`.
 - [ ] Discutir balanceamento de carga
 - [x] Comparar OpenMP GPU e CUDA
 - [x] Discutir impacto da transferência CPU-GPU
+
+## Resultados e Análise
+
+### Checklist
+
+- [x] Criar script para comparar clusters gerados
+- [x] Comparar clusters do sequencial com CUDA
+- [x] Comparar clusters do sequencial com OpenMP GPU
+- [x] Comparar clusters do CUDA com OpenMP GPU
+- [x] Criar tabela comparativa geral dos resultados
+- [ ] Atualizar comparativo geral com MPI + OpenMP
+- [ ] Avaliar escalabilidade forte
+- [ ] Avaliar escalabilidade fraca

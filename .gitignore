@@ -26,6 +26,7 @@ resultados/*
 !data/processed/*.csv
 !resultados/.gitkeep
 !resultados/initial_results.md
+!resultados/comparativo_geral.md
 !resultados/cuda/
 !resultados/cuda/.gitkeep
 !resultados/cuda/*.md
