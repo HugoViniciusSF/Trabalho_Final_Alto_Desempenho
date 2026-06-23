@@ -18,35 +18,28 @@ Este arquivo centraliza os checklists das implementações em `src/`.
 - [x] Medir tempo de execução
 - [x] Calcular speedup
 - [x] Calcular eficiência
-- [ ] Avaliar escalabilidade forte
-- [ ] Avaliar escalabilidade fraca
-- [ ] Discutir overhead de comunicação no MPI
-- [ ] Discutir balanceamento de carga
-- [ ] Comparar OpenMP GPU e CUDA
-- [ ] Discutir impacto da transferência CPU-GPU
+- [x] Usar como baseline das versões paralelas
 
 ## MPI + OpenMP
 
 ### Checklist
 
-- [ ] Dividir dados entre processos MPI
-- [ ] Paralelizar cálculo de distâncias com OpenMP
-- [ ] Sincronizar somas parciais dos centroides com MPI
-- [ ] Atualizar centroides globalmente
-- [ ] Testar diferentes números de processos MPI
-- [ ] Testar diferentes números de threads OpenMP
+- [x] Dividir dados entre processos MPI
+- [x] Paralelizar cálculo de distâncias com OpenMP
+- [x] Sincronizar somas parciais dos centroides com MPI
+- [x] Atualizar centroides globalmente
+- [x] Testar diferentes números de processos MPI
+- [x] Testar diferentes números de threads OpenMP
 
 ### Métricas
 
-- [ ] Medir tempo de execução
-- [ ] Calcular speedup
-- [ ] Calcular eficiência
-- [ ] Avaliar escalabilidade forte
+- [x] Medir tempo de execução
+- [x] Calcular speedup
+- [x] Calcular eficiência
+- [x] Avaliar escalabilidade forte
 - [ ] Avaliar escalabilidade fraca
-- [ ] Discutir overhead de comunicação no MPI
-- [ ] Discutir balanceamento de carga
-- [ ] Comparar OpenMP GPU e CUDA
-- [ ] Discutir impacto da transferência CPU-GPU
+- [x] Discutir overhead de comunicação no MPI
+- [x] Discutir balanceamento de carga
 
 ## OpenMP GPU
 
@@ -63,10 +56,6 @@ Este arquivo centraliza os checklists das implementações em `src/`.
 - [x] Medir tempo de execução
 - [x] Calcular speedup
 - [ ] Calcular eficiência
-- [ ] Avaliar escalabilidade forte
-- [ ] Avaliar escalabilidade fraca
-- [ ] Discutir overhead de comunicação no MPI
-- [ ] Discutir balanceamento de carga
 - [x] Comparar OpenMP GPU e CUDA
 - [x] Discutir impacto da transferência CPU-GPU
 
@@ -85,10 +74,6 @@ Este arquivo centraliza os checklists das implementações em `src/`.
 - [x] Medir tempo de execução
 - [x] Calcular speedup
 - [x] Calcular eficiência
-- [ ] Avaliar escalabilidade forte
-- [ ] Avaliar escalabilidade fraca
-- [ ] Discutir overhead de comunicação no MPI
-- [ ] Discutir balanceamento de carga
 - [x] Comparar OpenMP GPU e CUDA
 - [x] Discutir impacto da transferência CPU-GPU
 
@@ -99,8 +84,11 @@ Este arquivo centraliza os checklists das implementações em `src/`.
 - [x] Criar script para comparar clusters gerados
 - [x] Comparar clusters do sequencial com CUDA
 - [x] Comparar clusters do sequencial com OpenMP GPU
+- [x] Comparar clusters do sequencial com MPI + OpenMP
 - [x] Comparar clusters do CUDA com OpenMP GPU
+- [x] Comparar clusters do MPI + OpenMP com CUDA
+- [x] Comparar clusters do MPI + OpenMP com OpenMP GPU
 - [x] Criar tabela comparativa geral dos resultados
-- [ ] Atualizar comparativo geral com MPI + OpenMP
-- [ ] Avaliar escalabilidade forte
+- [x] Atualizar comparativo geral com MPI + OpenMP
+- [x] Avaliar escalabilidade forte do MPI + OpenMP
 - [ ] Avaliar escalabilidade fraca

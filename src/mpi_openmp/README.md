@@ -13,7 +13,7 @@ Essa versão deve responder principalmente:
 1. Quanto desempenho é ganho ao aumentar o número de processos MPI?
 2. Quanto desempenho é ganho ao aumentar o número de threads OpenMP?
 3. Qual o impacto da comunicação entre processos na atualização dos centroides?
-4. A versão híbrida produz clusters equivalentes aos da versão sequencial?
+4. Qual é a concordância dos clusters em relação à versão sequencial?
 
 ## 2. Entrada de Dados
 
@@ -49,17 +49,30 @@ O fluxo esperado é:
 
 ## 4. Organização do Código
 
-Preencher quando a implementação MPI + OpenMP estiver pronta.
-
 | Arquivo | Função |
 |---|---|
-| `main.c` | Ponto de entrada da versão híbrida |
-| `Makefile` | Compilação com MPI e OpenMP |
+| `main.c` | Ponto de entrada da versão híbrida. Inicializa MPI, carrega o dataset no processo 0, distribui os dados, mede o tempo e salva os clusters finais. |
+| `Makefile` | Compilação com `mpicc`, `-fopenmp` e `-DUSE_MPI`. |
 | `../utils/dataset_config.h` | Configuração do dataset, número de clusters e features |
 | `../utils/io_utils.c` | Leitura do CSV e escrita dos resultados |
-| `../utils/math_utils.c` | Funções auxiliares compartilhadas, se aplicável |
+| `../utils/math_utils.c` | Distância euclidiana, inicialização dos centroides e função `run_kmeans_mpi_openmp`. |
 
-## 5. Como Compilar e Rodar
+## 5. Detalhes da implementação
+
+A implementação atual segue a seguinte organização:
+
+1. O processo 0 lê `data/processed/penguins_clean.csv`.
+2. O número de pontos é enviado para todos os processos com `MPI_Bcast`.
+3. A divisão dos pontos é calculada com `sendcounts` e `displs`.
+4. Os dados são distribuídos com `MPI_Scatterv`.
+5. Os centroides iniciais são definidos no processo 0 e enviados aos demais processos com `MPI_Bcast`.
+6. Cada processo executa o K-means sobre seus pontos locais.
+7. O loop de atribuição de clusters é paralelizado com OpenMP.
+8. As somas parciais dos centroides e os tamanhos dos clusters são combinados com `MPI_Allreduce`.
+9. Os labels finais são reunidos no processo 0 com `MPI_Gatherv`.
+10. O resultado é salvo em `data/processed/results_mpi_openmp.csv`.
+
+## 6. Como Compilar e Rodar
 
 Com o Makefile criado, a execução deve seguir o modelo:
 
@@ -80,23 +93,22 @@ Para limpar os arquivos gerados:
 make clean
 ```
 
-## 6. Saída Esperada
-
-Preencher esta seção com a saída real do terminal após a execução.
+## 7. Saída do Terminal
 
 ```text
-Carregou ___ pontos com ___ features.
-Processos MPI: ___
-Threads OpenMP por processo: ___
+Carregou 333 pontos com 4 features.
+Lendo as seguintes colunas: bill_length_mm, bill_depth_mm, flipper_length_mm, body_mass_g
+Processos MPI: 1, 2 ou 4
+Threads OpenMP por processo: 1, 2 ou 4
 Iniciando K-Means MPI + OpenMP
-K-means concluido com sucesso em ___ interacoes
-Wall Clock Time: ___ segundos
+K-means concluido com sucesso em 9 interacoes
+Wall Clock Time: valores registrados na tabela de desempenho
 Clusters salvo: ../../data/processed/results_mpi_openmp.csv
 ```
 
-## 7. Resultado Gerado
+## 8. Resultado Gerado
 
-O arquivo de saída esperado é:
+O arquivo de saída gerado é:
 
 ```text
 ../../data/processed/results_mpi_openmp.csv
@@ -111,16 +123,24 @@ point_id,cluster_id
 2,_
 ```
 
-## 8. Resultados de Desempenho
+O CSV possui 333 pontos, mesma quantidade da versão sequencial. A comparação com os demais resultados registrados indicou 99,70% de concordância dos clusters, com divergência apenas no ponto 328.
 
-Preencher a tabela abaixo após os testes.
+## 9. Resultados de Desempenho
 
-| Processos MPI | Threads por processo | Total de threads | Tempo (s) | Iterações | Speedup | Eficiência |
+Tempo sequencial de referência: `0.000080000 s`.
+
+| Processos MPI | Threads por processo | Total de unidades | Tempo (s) | Iterações | Speedup | Eficiência |
 |---:|---:|---:|---:|---:|---:|---:|
-| 1 | 1 | 1 | 0.000080000 | 9 | 1.00 | 1.00 |
-| _preencher_ | _preencher_ | _preencher_ | _preencher_ | _preencher_ | _preencher_ | _preencher_ |
+| 1 | 1 | 1 | 0.000046000 | 9 | 1.739130 | 1.739130 |
+| 1 | 2 | 2 | 0.000198000 | 9 | 0.404040 | 0.202020 |
+| 1 | 4 | 4 | 0.000344000 | 9 | 0.232558 | 0.058140 |
+| 2 | 1 | 2 | 0.000689000 | 9 | 0.116110 | 0.058055 |
+| 2 | 2 | 4 | 0.000869000 | 9 | 0.092060 | 0.023015 |
+| 2 | 4 | 8 | 0.001207000 | 9 | 0.066280 | 0.008285 |
+| 4 | 1 | 4 | 0.000720000 | 9 | 0.111111 | 0.027778 |
+| 4 | 2 | 8 | 0.001303000 | 9 | 0.061397 | 0.007675 |
 
-## 9. Cálculo das Métricas
+## 10. Cálculo das Métricas
 
 O speedup deve ser calculado por:
 
@@ -140,20 +160,18 @@ Na versão híbrida, a quantidade total de unidades de execução pode ser consi
 processos_mpi * threads_openmp_por_processo
 ```
 
-## 10. Discussão dos Resultados
+## 11. Discussão dos Resultados
 
-Preencher após os testes.
+A implementação híbrida cobre a divisão dos dados entre processos, a paralelização local com OpenMP e a sincronização global dos centroides. A melhor medição foi obtida com 1 processo MPI e 1 thread OpenMP, com `0.000046000 s`.
 
-Pontos a discutir:
+O aumento do número de threads e processos não melhorou o desempenho neste dataset. Como a entrada tratada possui apenas 333 pontos, o trabalho computacional é pequeno e os tempos registrados indicam overhead de paralelização relevante.
 
-1. Impacto do aumento de processos MPI.
-2. Impacto do aumento de threads OpenMP.
-3. Custo de comunicação na sincronização dos centroides.
-4. Balanceamento de carga entre processos.
-5. Comparação dos clusters com a versão sequencial.
+As execuções com 2 e 4 processos foram mais lentas que a execução com 1 processo. Isso indica que, para este tamanho de entrada, o custo de comunicação e sincronização dos centroides superou o benefício da divisão do trabalho.
 
-## 11. Conclusão
+O balanceamento de carga não foi medido separadamente. Pelo código, os pontos são distribuídos de forma quase uniforme entre os processos.
 
-Preencher após a implementação e execução dos testes.
+Os clusters gerados tiveram alta concordância com a versão sequencial e também com as versões CUDA e OpenMP GPU. A única divergência observada ocorreu no ponto 328.
 
-A conclusão deve indicar se a abordagem híbrida trouxe ganho de desempenho, em quais configurações o ganho foi melhor e quais fatores limitaram a escalabilidade.
+## 12. Conclusão
+
+A versão MPI + OpenMP está implementada e gera clusters com 99,70% de concordância em relação às demais versões registradas. Para o Penguins Dataset, as configurações com mais processos e threads foram mais lentas que a configuração com 1 processo e 1 thread.
