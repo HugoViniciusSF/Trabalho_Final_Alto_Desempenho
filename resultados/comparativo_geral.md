@@ -9,7 +9,7 @@ As métricas experimentais da versão MPI + OpenMP foram medidas com variação 
 | Versão | Modelo de execução | Pontos | Iterações | Tempo total (s) | Tempo de kernels/computação (s) | Transferência/offload (s) | Speedup | Eficiência |
 |---|---|---:|---:|---:|---:|---:|---:|---|
 | Sequencial | CPU | 333 | 9 | 0.000080000 | - | - | 1.00 | 1.00 |
-| MPI + OpenMP | CPU com processos e threads | 333 | 9 | 0.000046000 | 0.000046000 | - | 1.739130 | 1.739130 |
+| MPI + OpenMP | CPU com processos e threads | 333 | 9 | 0.000048000 | 0.000048000 | - | 1.666667 | 1.666667 |
 | OpenMP GPU | GPU com OpenMP offload | 333 | 10 | 0.125462111 | 0.004286660 | 0.121175451 | 0.000638 | Não medida |
 | CUDA | GPU com CUDA | 333 | 10 | 0.158066884 | 0.001422059 | 0.156229382 | 0.000506 | 0.000000988 |
 

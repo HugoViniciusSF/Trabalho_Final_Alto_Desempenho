@@ -25,14 +25,14 @@ Tempo sequencial de referência: `0.000080000 s`.
 
 | Processos MPI | Threads por processo | Total de unidades | Tempo (s) | Iterações | Speedup | Eficiência |
 |---:|---:|---:|---:|---:|---:|---:|
-| 1 | 1 | 1 | 0.000046000 | 9 | 1.739130 | 1.739130 |
-| 1 | 2 | 2 | 0.000198000 | 9 | 0.404040 | 0.202020 |
-| 1 | 4 | 4 | 0.000344000 | 9 | 0.232558 | 0.058140 |
-| 2 | 1 | 2 | 0.000689000 | 9 | 0.116110 | 0.058055 |
-| 2 | 2 | 4 | 0.000869000 | 9 | 0.092060 | 0.023015 |
-| 2 | 4 | 8 | 0.001207000 | 9 | 0.066280 | 0.008285 |
-| 4 | 1 | 4 | 0.000720000 | 9 | 0.111111 | 0.027778 |
-| 4 | 2 | 8 | 0.001303000 | 9 | 0.061397 | 0.007675 |
+| 1 | 1 | 1 | 0.000048000 | 9 | 1.666667 | 1.666667 |
+| 1 | 2 | 2 | 0.000184000 | 9 | 0.434783 | 0.217391 |
+| 1 | 4 | 4 | 0.000313000 | 9 | 0.255591 | 0.063898 |
+| 2 | 1 | 2 | 0.000516000 | 9 | 0.155039 | 0.077519 |
+| 2 | 2 | 4 | 0.000924000 | 9 | 0.086580 | 0.021645 |
+| 2 | 4 | 8 | 0.001251000 | 9 | 0.063949 | 0.007994 |
+| 4 | 1 | 4 | 0.000740000 | 9 | 0.108108 | 0.027027 |
+| 4 | 2 | 8 | 0.001146000 | 9 | 0.069808 | 0.008726 |
 
 ## Comparação dos Clusters
 
@@ -56,7 +56,7 @@ python3 scripts/compare_results.py data/processed/results_mpi_openmp.csv data/pr
 
 - A versão MPI + OpenMP gera clusters com alta concordância em relação às demais versões registradas.
 - A única divergência ocorreu no ponto 328.
-- A melhor medição foi com 1 processo MPI e 1 thread OpenMP, com tempo de `0.000046000 s`.
+- A melhor medição foi com 1 processo MPI e 1 thread OpenMP, com tempo de `0.000048000 s`.
 - O aumento de processos e threads não trouxe ganho para este dataset, pois a entrada possui apenas 333 pontos.
 - Os tempos aumentaram nas configurações com mais processos e threads, indicando overhead de paralelização relevante para esta entrada.
 - O balanceamento de carga não foi medido separadamente. A divisão dos pontos é feita de forma quase uniforme entre os processos.
