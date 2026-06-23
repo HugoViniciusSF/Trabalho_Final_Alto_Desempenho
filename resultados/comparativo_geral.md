@@ -35,6 +35,7 @@ As métricas experimentais da versão MPI + OpenMP foram medidas com variação 
 - A melhor execução MPI + OpenMP foi com 1 processo MPI e 1 thread OpenMP.
 - Nas configurações MPI + OpenMP com mais processos e threads, os tempos aumentaram em relação à execução com 1 processo e 1 thread.
 - O dataset possui apenas 333 pontos, então os resultados devem ser interpretados considerando o tamanho reduzido da entrada.
+- Para os experimentos que utilizam GPU, o tempo de offload para a trasferência de dados pelo barramento da PCIE tomou ~95 e ~98% do tempo total para MPI e para CUDA respecitivamente.
 
 ## Como Reproduzir a Comparação dos Clusters
 

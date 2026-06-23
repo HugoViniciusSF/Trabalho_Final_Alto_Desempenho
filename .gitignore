@@ -41,6 +41,7 @@ resultados/*
 !resultados/sequencial/
 !resultados/sequencial/.gitkeep
 !resultados/sequencial/*.md
+data/processed/results_sequencial_v0.csv
 
 # Arquivos temporarios
 *.log
