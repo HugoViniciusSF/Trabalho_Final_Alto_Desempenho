@@ -9,7 +9,7 @@ As métricas experimentais da versão MPI + OpenMP foram medidas com variação 
 | Versão | Modelo de execução | Pontos | Iterações | Tempo total (s) | Tempo de kernels/computação (s) | Transferência/offload (s) | Speedup | Eficiência |
 |---|---|---:|---:|---:|---:|---:|---:|---|
 | Sequencial | CPU | 333 | 9 | 0.000080000 | - | - | 1.00 | 1.00 |
-| MPI + OpenMP | CPU com processos e threads | 333 | 9 | 0.000048000 | 0.000048000 | - | 1.666667 | 1.666667 |
+| MPI + OpenMP | CPU com processos e threads | 333 | 9 | 0.000055000 | 0.000055000 | - | 1.454545 | 1.454545 |
 | OpenMP GPU | GPU com OpenMP offload | 333 | 10 | 0.125462111 | 0.004286660 | 0.121175451 | 0.000638 | Não medida |
 | CUDA | GPU com CUDA | 333 | 10 | 0.158066884 | 0.001422059 | 0.156229382 | 0.000506 | 0.000000988 |
 
@@ -35,7 +35,7 @@ As métricas experimentais da versão MPI + OpenMP foram medidas com variação 
 - A melhor execução MPI + OpenMP foi com 1 processo MPI e 1 thread OpenMP.
 - Nas configurações MPI + OpenMP com mais processos e threads, os tempos aumentaram em relação à execução com 1 processo e 1 thread.
 - O dataset possui apenas 333 pontos, então os resultados devem ser interpretados considerando o tamanho reduzido da entrada.
-- Para os experimentos que utilizam GPU, o tempo de offload para a trasferência de dados pelo barramento da PCIE tomou ~95 e ~98% do tempo total para MPI e para CUDA respecitivamente.
+- Nos experimentos com GPU, o tempo de offload/transferência representou a maior parte do tempo total: aproximadamente 96,6% na versão OpenMP GPU e 98,8% na versão CUDA.
 
 ## Como Reproduzir a Comparação dos Clusters
 
