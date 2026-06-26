@@ -2,6 +2,7 @@
 #define CONFIG_H
 
 #define CLEAN_DATA_PATH "../../data/processed/penguins_clean.csv"
+// #define CLEAN_DATA_PATH "../../data/processed/penguins_expanded.csv"
 
 #define NUM_CLUSTERS 3
 #define NUM_FEATURES 4
